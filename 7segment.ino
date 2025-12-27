@@ -1,3 +1,5 @@
+// TTGO branch
+
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <RTClib.h>
@@ -46,7 +48,7 @@ void setup() {
   // put your setup code here, to run once:
 
   rtc.begin();
-  
+
   //rtc.adjust(DateTime(2025,12,27,10,20,00));
 
   Minutes.begin();
@@ -159,6 +161,7 @@ void updateServoBank(Adafruit_PWMServoDriver servoDriver, int tens, int numToDis
         setAngle(servoDriver,i+8*tens,offAngle[i]);
         Serial.print("0");
     }
+    delay(100); // Delay so all servos don't move at once
   }
 
   delay(100);
