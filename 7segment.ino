@@ -46,10 +46,8 @@ void setup() {
   // put your setup code here, to run once:
 
   rtc.begin();
-
-
-
-  //rtc.adjust(DateTime(2021,12,2,14,19,00));
+  
+  //rtc.adjust(DateTime(2025,12,27,10,20,00));
 
   Minutes.begin();
   Minutes.setOscillatorFrequency(27000000);
@@ -107,8 +105,6 @@ void loop() {
     //Serial.println(m%10);
     //Minutes ones
     updateServoBank(Minutes,0,m%10,minuteOnesOn,minuteOnesOff);
-
-    
 
     //Minutes tens
     updateServoBank(Minutes,1,m/10,minuteTensOn,minuteTensOff);
