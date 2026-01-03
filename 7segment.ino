@@ -14,6 +14,12 @@
 
 #define INPUT_SIZE 30
 
+int ir_pin = 2;
+int motion_detected = 0;
+DateTime motion_time = DateTime(2026,01,2,11,25,00);
+
+bool motion_active = false;
+bool move_now = false;
 
 
 
@@ -28,7 +34,7 @@ byte minuteOnesOn[] = {75,60,40,50,90,85,90};
                      // 8, 9,10,11,12,13,14
 byte minuteTensOn[] = {85,90,65,80,75,80,75};
                    //16,17,18,19,20,21, 22
-byte hourOnesOn[] = {90,70,95,30,75,85,105};
+byte hourOnesOn[] = {90,70,95,30,75,90,105};
                    //24,25, 26,27,28,29,30
 byte hourTensOn[] = {90,85,110,75,70,85,70};
 
@@ -37,9 +43,9 @@ byte minuteOnesOff[] = {150,130,105,125,175,150,165};
                       //  8,  9, 10, 11, 12, 13, 14
 byte minuteTensOff[] = {160,165,130,150,160,175,150};
                     // 16, 17, 18, 19, 20, 21, 22
-byte hourOnesOff[] = {170,155,160,110,162,157,180};
+byte hourOnesOff[] = {167,155,160,110,162,165,180};
                     // 24, 25, 26, 27, 28, 29, 30
-byte hourTensOff[] = {173,175,180,150,155,160,175};
+byte hourTensOff[] = {170,175,180,150,155,160,175};
 
 int currentMinutes = 0;
 int currentHours = 0;
@@ -48,8 +54,9 @@ void setup() {
   // put your setup code here, to run once:
 
   rtc.begin();
+  motion_time = rtc.now();
 
-  //rtc.adjust(DateTime(2025,12,27,10,20,00));
+  //rtc.adjust(DateTime(2026,01,2,11,25,00));
 
   Minutes.begin();
   Minutes.setOscillatorFrequency(27000000);
@@ -88,7 +95,19 @@ void loop() {
   // put your main code here, to run repeatedly:
 
    DateTime now = rtc.now();
+   motion_detected = digitalRead(ir_pin);
 
+   if (motion_detected == HIGH && !motion_active) {
+      motion_time = now;
+      move_now = true;
+   }
+
+    // Check if motion within last 5 minutes
+    if ((now.unixtime() - motion_time.unixtime()) < 60*5) {
+      motion_active = true;
+    } else {
+      motion_active = false;
+    }
   
 
    int m = now.minute();
@@ -99,7 +118,7 @@ void loop() {
     h -= 12;
    }
    
-  if(currentMinutes != m){
+  if((currentMinutes != m && motion_active) || move_now){
      char buf1[] = "hh:mm";
     Serial.println(now.toString(buf1));
     
@@ -114,7 +133,7 @@ void loop() {
     currentMinutes = m;
   }
 
-  if(currentHours != h){
+  if((currentHours != h && motion_active) || move_now){
     //Hours ones
     updateServoBank(Hours,0,h%10,hourOnesOn,hourOnesOff);
 
@@ -128,6 +147,7 @@ void loop() {
     currentHours = h;
   }
   
+  move_now = false;
 
   delay(1000);
 
