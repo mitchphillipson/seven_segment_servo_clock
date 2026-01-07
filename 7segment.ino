@@ -1,5 +1,8 @@
-// TTGO branch
-
+/*
+  7segment.ino
+  Created by Your Name, Date.
+  This code controls a 7-segment display using servos and an RTC module.
+*/
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <RTClib.h>
@@ -29,23 +32,22 @@ RTC_DS1307 rtc;
 
 byte digits[] = {119,36,107,109,60,93,95,100,127,125,0};
 
-                      //0, 1, 2, 3, 4, 5, 6
-byte minuteOnesOn[] = {75,60,40,50,90,85,90};
-                     // 8, 9,10,11,12,13,14
-byte minuteTensOn[] = {85,90,65,80,75,80,75};
-                   //16,17,18,19,20,21, 22
-byte hourOnesOn[] = {90,70,95,30,75,90,105};
-                   //24,25, 26,27,28,29,30
-byte hourTensOn[] = {90,85,110,75,70,85,70};
+                        //0,  1,  2,  3,  4,  5,  6
+byte minuteOnesOn[] =  { 75, 60, 40, 58, 90, 80, 90};
+byte minuteOnesOff[] = {147,130,105,120,170,150,163};
 
-                      //  0,  1,  2,  3,  4,  5, 6
-byte minuteOnesOff[] = {150,130,105,125,175,150,165};
-                      //  8,  9, 10, 11, 12, 13, 14
-byte minuteTensOff[] = {160,165,130,150,160,175,150};
-                    // 16, 17, 18, 19, 20, 21, 22
-byte hourOnesOff[] = {167,155,160,110,162,165,180};
-                    // 24, 25, 26, 27, 28, 29, 30
-byte hourTensOff[] = {170,175,180,150,155,160,175};
+                       // 8,  9, 10, 11, 12, 13, 14
+byte minuteTensOn[] =  { 85, 95, 65, 80, 75, 80, 75};
+byte minuteTensOff[] = {155,165,125,150,160,170,150};
+
+                   //16,17,18,19,20,21, 22
+byte hourOnesOn[] =  { 90, 70, 90, 40, 80, 100, 105};
+byte hourOnesOff[] = {167,150,160,110,160,175,175};
+
+                     //24, 25, 26, 27, 28, 29, 30
+byte hourTensOn[] =  { 95, 85,105, 75, 70, 85, 70};
+byte hourTensOff[] = {172,170,175,150,150,160,172};
+
 
 int currentMinutes = 0;
 int currentHours = 0;
@@ -165,9 +167,9 @@ void updateServoBank(Adafruit_PWMServoDriver servoDriver, int tens, int numToDis
    */
 
 
-  Serial.print("Number: ");
-  Serial.print(numToDisplay);
-  Serial.print(" Binary Expansion: ");
+  //Serial.print("Number: ");
+  //Serial.print(numToDisplay);
+  //Serial.print(" Binary Expansion: ");
   //for(int i = 0, mask = 1; i < 7; i++, mask = mask << 1){
   for(int i = 0;i<7;i++){
     //if (digits[numToDisplay] & mask){
